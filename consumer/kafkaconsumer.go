@@ -22,7 +22,7 @@ func main() {
 
 	configFile := os.Args[1]
 	conf := ReadConfig(configFile)
-	conf["group.id"] = "kafka-go-getting-started"
+	conf["group.id"] = "kafka-go-getting-started1"
 	conf["auto.offset.reset"] = "earliest"
 
 	c, err := kafka.NewConsumer(&conf)

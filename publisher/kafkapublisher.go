@@ -6,7 +6,9 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/signal"
 	"strings"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -48,19 +50,31 @@ func main() {
 	users := [...]string{"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"}
 	items := [...]string{"book", "alarm clock", "t-shirts", "gift card", "batteries"}
 
-	for n := 0; n < 10; n++ {
-		key := users[rand.Intn(len(users))]
-		data := items[rand.Intn(len(items))]
-		p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-			Key:            []byte(key),
-			Value:          []byte(data),
-		}, nil)
-	}
+	go func() {
+		for {
 
-	// Wait for all messages to be delivered
+			for n := 0; n < 10; n++ {
+				key := users[rand.Intn(len(users))]
+				data := items[rand.Intn(len(items))]
+				p.Produce(&kafka.Message{
+					TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+					Key:            []byte(key),
+					Value:          []byte(data),
+				}, nil)
+			}
+			time.Sleep(30 * time.Second)
+			// Wait for all messages to be delivered
+		}
+
+	}()
+
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, os.Interrupt)
+	<-signalCh
 	p.Flush(15 * 1000)
 	p.Close()
+	log.Println("Kaffka publisher stopped")
+
 }
 
 func ReadConfig(configFile string) kafka.ConfigMap {

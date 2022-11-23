@@ -5,13 +5,13 @@ DOCKER_IMG2="kafkaconsumer:develop"
 build-img1:
 	docker build \
 		-t $(DOCKER_IMG1) \
-		-f kafkapublisher/Dockerfile .
+		-f publisher/Dockerfile .
 
 
 build-img2:
 	docker build \
 		-t $(DOCKER_IMG2) \
-		-f kafkaconsumer/Dockerfile .
+		-f consumer/Dockerfile .
 	
 
  

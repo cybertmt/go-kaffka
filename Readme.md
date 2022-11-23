@@ -37,6 +37,14 @@ docker compose exec broker \
 ```
 ./consumer getting-started.properties
 ``` 
+## conf["group.id"] = "kafka-go-getting-started1" unique for broadcast
+```
+docker run -it --name kafkaconsumer kafkaconsumer:develop
+```
+```
+docker run -it --name kafkapublisher kafkapublisher:develop
+```
+
 
 
 

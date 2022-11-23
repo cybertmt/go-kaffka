@@ -1,21 +1,22 @@
 # Собираем в гошке
-FROM golang:1.17-alpine as builder
+FROM golang:1.17 as builder
+
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 COPY ./consumer .
 
-RUN go build -o /kafka-consumer
+RUN go build -o kafka-consumer
+RUN ls /app/
 
 ## Deploy
-FROM alpine:latest
+FROM debian:latest
 
 WORKDIR /
 
-COPY --from=builder /kafka-consumer /kafka-consumer
-COPY --from=builder /app /
-
-ENTRYPOINT ["/kafka-consumer"]
+COPY --from=builder /app /bin
+RUN ls /bin
+RUN chmod +x /bin/kafka-consumer
+ENTRYPOINT [ "./bin/kafka-consumer", "/bin/getting-started.properties"]
