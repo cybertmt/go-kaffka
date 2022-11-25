@@ -44,6 +44,10 @@ docker run -it --name kafkaconsumer kafkaconsumer:develop
 ```
 docker run -it --name kafkapublisher kafkapublisher:develop
 ```
+## Web UI
+```
+docker run -p 9097:8080 -e KAFKA_CLUSTERS_0_NAME=cyberkafka -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=10.22.22.32:29092 -d provectuslabs/kafka-ui:latest
+```
 
 
 
